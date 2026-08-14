@@ -112,6 +112,16 @@
               "toggle-dev-tools": "Toggle DevTools"
             }
           },
+          "adblocker": {
+            "label": "AdBlocker (Built-in)",
+            "skip-video-ads": "Auto Fast-Forward & Skip Video Ads (16x)",
+            "hide-cosmetic-promos": "Hide Cosmetic Banners & Premium Promos",
+            "bypass-anti-adblock": "Bypass Anti-Adblock Modals",
+            "engine": {
+              "in-player": "In-Player Smart AdBlock",
+              "with-blocklists": "Network Blocker with uBlock Lists"
+            }
+          },
           "always-on-top": "Always on top",
           "auto-update": "Auto Update",
           "hide-menu": {
@@ -498,11 +508,14 @@
       }
     },
     "do-not-track": {
-      "description": "Block all tracking out of the box",
+      "description": "Block all tracking, video ads, and YouTube banners out of the box",
       "menu": {
-        "blocker": "Blocker"
+        "blocker": "Blocker Engine",
+        "skip-video-ads": "Auto Fast-Forward & Skip Video Ads",
+        "hide-cosmetic-promos": "Hide Banners & Premium Prompts",
+        "bypass-anti-adblock": "Bypass Anti-Adblock Warnings"
       },
-      "name": "Do Not Track"
+      "name": "AdBlocker & Do Not Track"
     },
     "downloader": {
       "backend": {

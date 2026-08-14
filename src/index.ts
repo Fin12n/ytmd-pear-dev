@@ -47,6 +47,7 @@ import {
   handleProtocol,
   setupProtocolHandler,
 } from '@/providers/protocol-handler';
+import { setupAdblocker } from '@/providers/adblocker/main';
 import { setupSongInfo } from '@/providers/song-info';
 import { setUpTray } from '@/tray';
 import { LoggerPrefix } from '@/utils';
@@ -530,7 +531,7 @@ async function createMainWindow() {
   return win;
 }
 
-app.once('browser-window-created', (_event, win) => {
+app.once('browser-window-created', async (_event, win) => {
   if (config.get('options.overrideUserAgent')) {
     // User agents are from https://developers.whatismybrowser.com/useragents/explore/
     const originalUserAgent = win.webContents.userAgent;
@@ -566,6 +567,7 @@ app.once('browser-window-created', (_event, win) => {
 
   setupSongInfo(win);
   setupAppControls();
+  await setupAdblocker(win);
 
   win.webContents.on(
     'did-fail-load',

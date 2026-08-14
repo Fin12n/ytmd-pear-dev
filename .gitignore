@@ -1,17 +1,96 @@
-node_modules
-/dist
-/pack
-.vscode/settings.json
-.idea
-
-.pnp.*
-.pnpm-store
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-.vite-inspect
 
+# Build Outputs & Bundles
+/dist/
+/out/
+/out-setup/
+/pack/
+/pack-build/
+/pack-dist/
+/pack-win/
+/dist-release/
+/dist-setup/
+/dist-installer/
+/dist-pack/
+/build-release/
+/release/
+.vite-inspect/
+
+# Electron / Package Installers & Binaries
+*.exe
+*.blockmap
+*.dmg
+*.pkg
+*.appimage
+*.deb
+*.rpm
+*.snap
+*.zip
+*.tar.gz
+*.7z
+
+# Logs & Error Dumps
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+
+# Editor & IDE Configs
+.idea/
+.vscode/settings.json
+.vscode/*.log
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS Generated Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+.eslintcache
+
+# Agent-Skills-4-Vibe-Coding-CLI & AI Assistant Workspace Files
+.agent/
+.agent-*/
+GEMINI.md
+AGENTS.md
+ERRORS.md
+PLAN-*.md
+*.plan.md
+task_plan.md
+findings.md
+progress.md

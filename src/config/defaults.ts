@@ -1,3 +1,6 @@
+import { defaultAdBlockerConfig } from '@/providers/adblocker/config';
+import type { AdBlockerConfig } from '@/providers/adblocker/types';
+
 export interface WindowSizeConfig {
   width: number;
   height: number;
@@ -36,6 +39,7 @@ export interface DefaultConfig {
     usePodcastParticipantAsArtist: boolean;
     themes: string[];
     customWindowTitle?: string;
+    adblocker: AdBlockerConfig;
   };
   'plugins': Record<string, unknown>;
 }
@@ -72,6 +76,8 @@ export const defaultConfig: DefaultConfig = {
     overrideUserAgent: false,
     usePodcastParticipantAsArtist: false,
     themes: [],
+    adblocker: defaultAdBlockerConfig,
   },
   'plugins': {},
 };
+

@@ -1,10 +1,10 @@
-import { blockers } from '@/plugins/do-not-track/types';
 import { DefaultPresetList, type Preset } from '@/plugins/downloader/types';
+import { blockers } from '@/providers/adblocker/types';
 
 import { defaultConfig as defaults } from './defaults';
 
-import type { TrackerBlockerConfig } from '@/plugins/do-not-track';
 import type { SyncedLyricsPluginConfig } from '@/plugins/synced-lyrics/types';
+import type { AdBlockerConfig } from '@/providers/adblocker/types';
 
 // HACK: electron-store is ESM, but rolldown has a bug that prevents it from being imported properly in CommonJS context, so we have to use require here
 /* oxlint-disable typescript/no-require-imports */
@@ -21,15 +21,23 @@ export type IStore = InstanceType<
 
 const migrations = {
   '>=3.12.0'(store: IStore) {
-    const blockerConfig = store.get('plugins.adblocker') as TrackerBlockerConfig;
-    if (blockerConfig) {
-      if (!Object.values(blockers).includes(blockerConfig.blocker)) {
-        blockerConfig.blocker = blockers.InPlayer;
+    const oldConfig = (store.get('plugins.do-not-track') ||
+      store.get('plugins.adblocker')) as Partial<AdBlockerConfig> | undefined;
+    if (oldConfig) {
+      if (oldConfig.blocker && !Object.values(blockers).includes(oldConfig.blocker)) {
+        oldConfig.blocker = blockers.InPlayer;
       }
-      store.set('plugins.do-not-track', blockerConfig);
+      const current = (store.get('options.adblocker') || {}) as Partial<AdBlockerConfig>;
+      store.set('options.adblocker', {
+        ...current,
+        ...oldConfig,
+        enabled: true,
+      });
+      store.delete('plugins.do-not-track');
       store.delete('plugins.adblocker');
     }
   },
+
   '>=3.10.0'(store: IStore) {
     const lyricGeniusConfig = store.get('plugins.lyrics-genius') as
       | {

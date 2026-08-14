@@ -7,6 +7,7 @@ import {
 import is from 'electron-is';
 
 import { loadI18n, setLanguage } from '@/i18n';
+import { setupPreloadAdblocker } from '@/providers/adblocker/preload';
 
 import * as config from './config';
 import {
@@ -15,8 +16,12 @@ import {
   loadAllPreloadPlugins,
 } from './loader/preload';
 
+// Initialize Built-in Native AdBlocker Engine (Deep JSON Pruning, 16x Video Skipper, Cosmetic Filter & Anti-Adblock)
+setupPreloadAdblocker();
+
 // @ts-expect-error dummy
 globalThis.customElements = { define() {} };
+
 
 new MutationObserver((mutations, observer) => {
   for (const mutation of mutations) {

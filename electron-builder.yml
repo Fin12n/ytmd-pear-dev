@@ -1,5 +1,6 @@
 appId: "com.github.th-ch.\u0079\u006f\u0075\u0074\u0075\u0062\u0065\u002d\u006d\u0075\u0073\u0069\u0063"
 productName: "\u0059\u006f\u0075\u0054\u0075\u0062\u0065\u0020\u004d\u0075\u0073\u0069\u0063"
+electronDist: node_modules/electron/dist
 files:
   - '!*'
   - dist
@@ -35,9 +36,33 @@ win:
         - x64
         - ia32
         - arm64
-  compression: maximum
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  runAfterFinish: true
+  license: license
+  displayLanguageSelector: true
+  installerLanguages:
+    - vi
+    - en_US
+  include: build/installer.nsh
 nsisWeb:
-  runAfterFinish: false
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  runAfterFinish: true
+  license: license
+  displayLanguageSelector: true
+  include: build/installer.nsh
+
+
 linux:
   icon: assets/generated/icons/png
   category: AudioVideo
@@ -119,4 +144,16 @@ snap:
     - mpris:
         interface: mpris
 directories:
-  output: ./pack/
+  output: ./dist-setup/
+
+
+
+
+
+
+
+
+
+
+
+

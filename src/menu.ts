@@ -17,6 +17,7 @@ import { APPLICATION_NAME, setLanguage, t } from '@/i18n';
 
 import * as config from './config';
 import { getAllMenuTemplate, loadAllMenuPlugins } from './loader/menu';
+import { blockers } from './providers/adblocker/types';
 import { restart } from './providers/app-controls';
 import { startingPages } from './providers/extracted-data';
 import promptOptions from './providers/prompt-options';
@@ -165,6 +166,77 @@ export const mainMenuTemplate = async (
           click(item: MenuItem) {
             config.setMenuOption('options.autoUpdates', item.checked);
           },
+        },
+        {
+          label: t('main.menu.options.submenu.adblocker.label'),
+          submenu: [
+            {
+              label: t('main.menu.options.submenu.adblocker.skip-video-ads'),
+              type: 'checkbox',
+              checked: config.get('options.adblocker.skipVideoAds') ?? true,
+              click(item: MenuItem) {
+                config.setMenuOption(
+                  'options.adblocker.skipVideoAds',
+                  item.checked,
+                );
+              },
+            },
+            {
+              label: t(
+                'main.menu.options.submenu.adblocker.hide-cosmetic-promos',
+              ),
+              type: 'checkbox',
+              checked: config.get('options.adblocker.hideCosmeticPromos') ?? true,
+              click(item: MenuItem) {
+                config.setMenuOption(
+                  'options.adblocker.hideCosmeticPromos',
+                  item.checked,
+                );
+              },
+            },
+            {
+              label: t(
+                'main.menu.options.submenu.adblocker.bypass-anti-adblock',
+              ),
+              type: 'checkbox',
+              checked: config.get('options.adblocker.bypassAntiAdblock') ?? true,
+              click(item: MenuItem) {
+                config.setMenuOption(
+                  'options.adblocker.bypassAntiAdblock',
+                  item.checked,
+                );
+              },
+            },
+            { type: 'separator' },
+            {
+              label: t('main.menu.options.submenu.adblocker.engine.in-player'),
+              type: 'radio',
+              checked:
+                (config.get('options.adblocker.blocker') ??
+                  blockers.InPlayer) === blockers.InPlayer,
+              click() {
+                config.setMenuOption(
+                  'options.adblocker.blocker',
+                  blockers.InPlayer,
+                );
+              },
+            },
+            {
+              label: t(
+                'main.menu.options.submenu.adblocker.engine.with-blocklists',
+              ),
+              type: 'radio',
+              checked:
+                config.get('options.adblocker.blocker') ===
+                blockers.WithBlocklists,
+              click() {
+                config.setMenuOption(
+                  'options.adblocker.blocker',
+                  blockers.WithBlocklists,
+                );
+              },
+            },
+          ],
         },
         {
           label: t('main.menu.options.submenu.resume-on-start'),

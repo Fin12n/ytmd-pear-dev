@@ -112,6 +112,16 @@
               "toggle-dev-tools": "Bật/tắt DevTools"
             }
           },
+          "adblocker": {
+            "label": "Chặn quảng cáo (Tích hợp sẵn)",
+            "skip-video-ads": "Tự động tua & Bỏ qua Video Ad (16x)",
+            "hide-cosmetic-promos": "Ẩn biểu ngữ & Lời nhắc Premium",
+            "bypass-anti-adblock": "Vượt qua cảnh báo Anti-Adblock",
+            "engine": {
+              "in-player": "Chặn thông minh trong trình phát (In-Player)",
+              "with-blocklists": "Chặn mạng với bộ lọc uBlock (Network)"
+            }
+          },
           "always-on-top": "Luôn ở trên cùng",
           "auto-update": "Tự động cập nhật",
           "hide-menu": {
@@ -496,6 +506,16 @@
           "title": "Đặt thời gian chờ không hoạt động"
         }
       }
+    },
+    "do-not-track": {
+      "description": "Chặn toàn bộ theo dõi, quảng cáo video và banner quảng cáo trên YouTube Music",
+      "menu": {
+        "blocker": "Bộ máy Chặn",
+        "skip-video-ads": "Tự động Tua nhanh & Bỏ qua Quảng cáo Video",
+        "hide-cosmetic-promos": "Ẩn Banner & Thông báo Premium",
+        "bypass-anti-adblock": "Vượt qua Cảnh báo Anti-Adblock"
+      },
+      "name": "Chặn Quảng cáo & Do Not Track"
     },
     "downloader": {
       "backend": {

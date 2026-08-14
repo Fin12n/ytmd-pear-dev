@@ -1,19 +1,11 @@
 /*
- * Source: https://addons.mozilla.org/en-US/firefox/addon/adblock-for-youtube/
- * https://robwu.nl/crxviewer/?crx=https%3A%2F%2Faddons.mozilla.org%2Fen-US%2Ffirefox%2Faddon%2Fadblock-for-youtube%2F
- *
- * Parts of this code is derived from set-constant.js:
- * https://github.com/gorhill/uBlock/blob/5de0ce975753b7565759ac40983d31978d1f84ca/assets/resources/scriptlets.js#L704
+ * Deep JSON Response Pruning & uBlock-style Property Traps for Pears Music Desktop
+ * Derived from uBlock Origin scriptlets: json-prune & set-constant
  */
 
 import type { ContextBridge } from 'electron';
 
 interface PrunableResponse {
-  playerAds?: unknown;
-  adPlacements?: unknown;
-  adSlots?: unknown;
-  playerResponse?: PrunableResponse;
-  ytInitialPlayerResponse?: PrunableResponse;
   [key: string]: unknown;
 }
 
@@ -28,35 +20,71 @@ interface TrapHandler {
 
 let injected = false;
 
-export const isInjected = (): boolean => injected;
+export const isJsonPrunerInjected = (): boolean => injected;
 
-export const inject = (contextBridge: ContextBridge): void => {
-  injected = true;
-  {
-    const pruner = (o: PrunableResponse): PrunableResponse => {
-      delete o.playerAds;
-      delete o.adPlacements;
-      delete o.adSlots;
-      if (o.playerResponse) {
-        delete o.playerResponse.playerAds;
-        delete o.playerResponse.adPlacements;
-        delete o.playerResponse.adSlots;
-      }
-      if (o.ytInitialPlayerResponse) {
-        delete o.ytInitialPlayerResponse.playerAds;
-        delete o.ytInitialPlayerResponse.adPlacements;
-        delete o.ytInitialPlayerResponse.adSlots;
-      }
+const TARGET_AD_KEYS = new Set([
+  'playerAds',
+  'adPlacements',
+  'adSlots',
+  'adBreaks',
+  'adSlotData',
+  'mealbarPromos',
+  'promotions',
+  'auxiliaryUi',
+]);
 
-      return o;
-    };
-
-    contextBridge.exposeInMainWorld('_pruner', pruner);
+export const pruneObject = <T>(obj: T, visited = new WeakSet()): T => {
+  if (!obj || typeof obj !== 'object') {
+    return obj;
   }
+
+  if (visited.has(obj as object)) {
+    return obj;
+  }
+  visited.add(obj as object);
+
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      obj[i] = pruneObject(obj[i], visited);
+    }
+    return obj;
+  }
+
+  const record = obj as Record<string, unknown>;
+  for (const key of Object.keys(record)) {
+    if (TARGET_AD_KEYS.has(key)) {
+      delete record[key];
+    } else {
+      record[key] = pruneObject(record[key], visited);
+    }
+  }
+
+  return obj;
+};
+
+export const injectJsonPruner = (contextBridge: ContextBridge): void => {
+  if (injected) return;
+  injected = true;
+
+  contextBridge.exposeInMainWorld('_pruner', (o: PrunableResponse) =>
+    pruneObject(o),
+  );
 
   const chains = [
     {
       chain: 'playerResponse.adPlacements',
+      cValue: 'undefined',
+    },
+    {
+      chain: 'playerResponse.playerAds',
+      cValue: 'undefined',
+    },
+    {
+      chain: 'playerResponse.adSlots',
+      cValue: 'undefined',
+    },
+    {
+      chain: 'playerResponse.adBreaks',
       cValue: 'undefined',
     },
     {
@@ -69,6 +97,14 @@ export const inject = (contextBridge: ContextBridge): void => {
     },
     {
       chain: 'ytInitialPlayerResponse.adSlots',
+      cValue: 'undefined',
+    },
+    {
+      chain: 'ytInitialPlayerResponse.adBreaks',
+      cValue: 'undefined',
+    },
+    {
+      chain: 'ytInitialPlayerResponse.mealbarPromos',
       cValue: 'undefined',
     },
   ];
@@ -104,19 +140,16 @@ export const inject = (contextBridge: ContextBridge): void => {
 
       case 'noopFunc': {
         cValue = () => {};
-
         break;
       }
 
       case 'trueFunc': {
         cValue = () => true;
-
         break;
       }
 
       case 'falseFunc': {
         cValue = () => false;
-
         break;
       }
 
